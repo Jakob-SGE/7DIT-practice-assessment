@@ -1,29 +1,26 @@
-""""
-Additional optional features:
-Allow the user to choose specific students and have their data exported to a text file
-Anything else you think would be useful / appropriate
-"""
-
 
 student_data = {"Joe" : {"Surname" : "Doe", "Year" : 12, "Achieved_credits" : 30, "Merit_credits" : 25, "Excellence_credits" : 20},
                 "Joost" : {"Surname" : "Kopperschmidt", "Year" : 13, "Achieved_credits" : 30, "Merit_credits" : 25, "Excellence_credits" : 20},
                 "Michal" : {"Surname" : "Kulich", "Year" : 11, "Achieved_credits" : 30, "Merit_credits" : 25, "Excellence_credits" : 20}}
 
+CREDITS_TO_PASS = 60
+
+CREDITS_FOR_ENDORSEMENT = 50
 
 def menu():
     print(f"{"WELCOME TO THE STUDENT DATABASE":.^60}")
     print("*"*60)
-    print(f"{"MAIN MENU":.^60}")
-    print(f"|{"OPTION 0":<10}{"Stop the program":>50}|")
-    print(f"|{"OPTION 1":<10}{"Show all student data":>50}|")
-    print(f"|{"OPTION 2":<10}{"List of students who pass NCEA":>50}|")
-    print(f"|{"OPTION 3":<10}{"List of students with endorsment":>50}|")
-    print(f"|{"OPTION 4":<10}{"Summary of students from one year":>50}|")
-    print(f"|{"OPTION 5":<10}{"Add credits to a student":>50}|") 
-    print(f"|{"OPTION 6":<10}{"Add a new student":>50}|")
-    print(f"|{"OPTION 7":<10}{"Show a specific student":>50}|")
-    print(f"|{"OPTION 8":<10}{"Export a specfics students data to a text file":>50}|")
     while True:
+        print(f"{"MAIN MENU":.^60}")
+        print(f"|{"OPTION 0":<10}{"Stop the program":>50}|")
+        print(f"|{"OPTION 1":<10}{"Show all student data":>50}|")
+        print(f"|{"OPTION 2":<10}{"List of students who pass NCEA":>50}|")
+        print(f"|{"OPTION 3":<10}{"List of students with endorsment":>50}|")
+        print(f"|{"OPTION 4":<10}{"Summary of students from one year":>50}|")
+        print(f"|{"OPTION 5":<10}{"Add credits to a student":>50}|") 
+        print(f"|{"OPTION 6":<10}{"Add a new student":>50}|")
+        print(f"|{"OPTION 7":<10}{"Show a specific student":>50}|")
+        print(f"|{"OPTION 8":<10}{"Export a specfics students data to a text file":>50}|")
         option = input("Enter your Option: ")
         if option == "1":
             summary(student_data)
@@ -46,19 +43,22 @@ def menu():
         else:
             print("Enter a valid option")
 
+def print_data(student, detail, student_data):
+    total_credits = detail["Achieved_credits"] + detail["Merit_credits"] + detail["Excellence_credits"]
+    print(f"{student} {detail["Surname"]}: Year {detail["Year"]}, total credits {total_credits}, Achieved credits: {detail["Achieved_credits"]}, Merit credits: {detail["Merit_credits"]}, Excellence credits: {detail["Excellence_credits"]} ")
+
 
 def summary(student_data):
-    print(f"{"|ALL STUDENT DATA|":.^50}")
+    print(f"{"|ALL STUDENT DATA|":.^60}")
     for student, detail in student_data.items():
-        total_credits = detail["Achieved_credits"] + detail["Merit_credits"] + detail["Excellence_credits"]
-        print(f"{student} {detail["Surname"]}: Year {detail["Year"]}, total credits {total_credits} ")
-
+        print_data(student, detail, student_data)
+       
 
 
 def ncea_passed(student_data):
     for student, detail in student_data.items():
         total_credits = detail["Achieved_credits"] + detail["Merit_credits"] + detail["Excellence_credits"]
-        if total_credits >= 60:
+        if total_credits >= CREDITS_TO_PASS:
             print(f"{student} {detail["Surname"]} passes NCEA") 
         else:
             print(f"{student} {detail["Surname"]} fails NCEA")
@@ -66,9 +66,9 @@ def ncea_passed(student_data):
 
 def endorsement_list(student_data):
     for student, detail in student_data.items():
-        if detail["Excellence_credits"] >= 50:
+        if detail["Excellence_credits"] >= CREDITS_FOR_ENDORSEMENT:
             print(f"{student} {detail["Surname"]} has Excellence endorsement")
-        elif detail["Excellence_credits"]+detail["Merit_credits"] >= 50:
+        elif detail["Excellence_credits"]+detail["Merit_credits"] >= CREDITS_FOR_ENDORSEMENT:
             print(f"{student} {detail["Surname"]} has Merit endorsement")
         else:
             print(f"{student} {detail["Surname"]} has no endorsement")
@@ -85,8 +85,7 @@ def year_summary(student_data):
 def get_year_summary(student_data, option):
     for student, detail in student_data.items():
         if detail["Year"] == option:
-            total_credits = detail["Achieved_credits"] + detail["Merit_credits"] + detail["Excellence_credits"]
-            print(f"{student} {detail["Surname"]}: Year {detail["Year"]}, total credits {total_credits}")
+            print_data(student, detail,student_data)
         else:
             continue
 
