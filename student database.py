@@ -1,7 +1,8 @@
 
 student_data = {"Joe" : {"Surname" : "Doe", "Year" : 12, "Achieved_credits" : 30, "Merit_credits" : 25, "Excellence_credits" : 20},
                 "Joost" : {"Surname" : "Kopperschmidt", "Year" : 13, "Achieved_credits" : 30, "Merit_credits" : 25, "Excellence_credits" : 20},
-                "Michal" : {"Surname" : "Kulich", "Year" : 11, "Achieved_credits" : 30, "Merit_credits" : 25, "Excellence_credits" : 20}}
+                "Michal" : {"Surname" : "Kulich", "Year" : 11, "Achieved_credits" : 30, "Merit_credits" : 25, "Excellence_credits" : 20},
+                "Malte" : {"Surname" : "Filgraebe", "Year" : 11, "Achieved_credits" : 10, "Merit_credits" : 35, "Excellence_credits" : 55}}
 
 CREDITS_TO_PASS = 60
 
@@ -43,15 +44,12 @@ def menu():
         else:
             print("Enter a valid option")
 
-def print_data(student, detail, student_data):
-    total_credits = detail["Achieved_credits"] + detail["Merit_credits"] + detail["Excellence_credits"]
-    print(f"{student} {detail["Surname"]}: Year {detail["Year"]}, total credits {total_credits}, Achieved credits: {detail["Achieved_credits"]}, Merit credits: {detail["Merit_credits"]}, Excellence credits: {detail["Excellence_credits"]} ")
-
 
 def summary(student_data):
     print(f"{"|ALL STUDENT DATA|":.^60}")
-    for student, detail in student_data.items():
-        print_data(student, detail, student_data)
+    for name in student_data:
+        total_credits = combined_credits(student_data, name)
+        print(display_student_data(student_data, name, total_credits))
        
 
 
@@ -75,17 +73,14 @@ def endorsement_list(student_data):
 
 
 def year_summary(student_data):
-    option = int(input("Enter which year: "))
-    if option == 11 or 12 or 13:
-        get_year_summary(student_data, option)
-    else: 
-        print("Enter a valid option")
-    
+    option = year_input()
+    get_year_summary(student_data, option)
 
+    
 def get_year_summary(student_data, option):
-    for student, detail in student_data.items():
-        if detail["Year"] == option:
-            print_data(student, detail,student_data)
+    for name in student_data:
+        if student_data[name]["Year"] == option:
+            print(display_student_data(name, student_data, combined_credits(name, student_data)))
         else:
             continue
 
@@ -117,7 +112,10 @@ def credits_input(level):
     while True:
         try:
             credits = int(input(f"Enter the amount of {level} credits: "))
-            return credits
+            if credits >= 0:
+                return credits
+            else:
+                print("Enter a valid input")
         except ValueError:
             print("Enter a valid input")
 
