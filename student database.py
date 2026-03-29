@@ -62,9 +62,7 @@ def ncea_passed(student_data):
         total_credits = detail["Achieved_credits"] + detail["Merit_credits"] + detail["Excellence_credits"]
         if total_credits >= CREDITS_TO_PASS:
             print(f"{student} {detail["Surname"]} passes NCEA") 
-        else:
-            continue
-
+5
 
 def endorsement_list(student_data):
     """executes option 3 and gives a list of students who got endorsements"""
@@ -73,8 +71,7 @@ def endorsement_list(student_data):
             print(f"{student} {detail["Surname"]} has Excellence endorsement")
         elif detail["Excellence_credits"]+detail["Merit_credits"] >= CREDITS_FOR_ENDORSEMENT:
             print(f"{student} {detail["Surname"]} has Merit endorsement")
-        else:
-            continue
+
 
 
 def year_summary(student_data):
@@ -89,11 +86,11 @@ def add_credits():
     credits = credits_input("")
     level = input("Enter 1/2/3 for Achieved/Merit/Excellence: ")
     if level == "1":
-        get_add_credits(name, credits, "Achieved_credits")
+        get_add_credits(name, credits, "Achieved_credits", "Achieved")
     elif level == "2":
-        get_add_credits(name, credits, "Merit_credits")
+        get_add_credits(name, credits, "Merit_credits", "Merit")
     elif level == "3":
-        get_add_credits(name, credits, "Excellence_credits")
+        get_add_credits(name, credits, "Excellence_credits", "Excellence")
     else:
         print("Enter a valid input")
 
@@ -102,10 +99,9 @@ def get_year_summary(student_data, option):
     """sorts out the students from the year given and prints it"""
     for name in student_data:
         if student_data[name]["Year"] == option:
-            total_credits = combined_credits(name, student_data)
-            print(display_student_data(name, student_data, total_credits ))
-        else:
-            continue
+            total_credits = combined_credits(student_data, name)
+            print(display_student_data(student_data, name, total_credits))
+
 
 
 def add_student(student_data):
@@ -127,10 +123,10 @@ def show_student(student_data):
     print(display_student_data(student_data, name, total_credits))
 
 
-def get_add_credits(name, credits, level):
+def get_add_credits(name, credits, level, level_name):
     """adds credits to a given student at a given level"""
     student_data[name][level] += credits
-    print(f"You added {credits} credits at {level} for {name}")
+    print(f"You added {credits} credits at {level_name} for {name}")
 
        
 def name_input(student_data):
@@ -148,7 +144,7 @@ def credits_input(level):
     while True:
         try:
             credits = int(input(f"Enter the amount of {level} credits: "))
-            if credits >= 0:
+            if credits >= 0 and credits <= 100:
                 return credits
             else:
                 print("Enter a valid input")
