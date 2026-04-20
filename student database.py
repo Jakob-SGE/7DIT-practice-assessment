@@ -62,7 +62,7 @@ def ncea_passed(student_data):
         total_credits = detail["Achieved_credits"] + detail["Merit_credits"] + detail["Excellence_credits"]
         if total_credits >= CREDITS_TO_PASS:
             print(f"{student} {detail["Surname"]} passes NCEA") 
-5
+
 
 def endorsement_list(student_data):
     """executes option 3 and gives a list of students who got endorsements"""
@@ -84,15 +84,19 @@ def add_credits():
     """executes option 5 to add credits to a student"""
     name = name_input(student_data)
     credits = credits_input("")
-    level = input("Enter 1/2/3 for Achieved/Merit/Excellence: ")
-    if level == "1":
-        get_add_credits(name, credits, "Achieved_credits", "Achieved")
-    elif level == "2":
-        get_add_credits(name, credits, "Merit_credits", "Merit")
-    elif level == "3":
-        get_add_credits(name, credits, "Excellence_credits", "Excellence")
-    else:
-        print("Enter a valid input")
+    while True:
+        level = input("Enter 1/2/3 for Achieved/Merit/Excellence: ")
+        if level == "1":
+            get_add_credits(name, credits, "Achieved_credits", "Achieved")
+            break
+        elif level == "2":
+            get_add_credits(name, credits, "Merit_credits", "Merit")
+            break
+        elif level == "3":
+            get_add_credits(name, credits, "Excellence_credits", "Excellence")
+            break
+        else:
+            print("Enter a valid input")
 
 
 def get_year_summary(student_data, option):
@@ -140,29 +144,27 @@ def name_input(student_data):
 
 
 def credits_input(level):
-    """gets the credits input and validates that input"""
+    """calls the int input function for the credits input at a given level"""
+    int_input(f"Enter the amount of {level} credits: ", "Enter a valid amount of credits", (0, 100))
+
+
+def int_input(prompt, error_message, range):
+    """Gets the credits and year input and validates it"""
     while True:
-        try:
-            credits = int(input(f"Enter the amount of {level} credits: "))
-            if credits >= 0 and credits <= 100:
-                return credits
+        try: 
+            num = int(input(prompt))
+            if num in range:
+                return num
             else:
-                print("Enter a valid input")
+                print(error_message)
         except ValueError:
-            print("Enter a valid input")
+            print(error_message)
 
 
 def year_input():
-    """gets the year input so only valid year can be inputted"""
-    while True:
-        try:
-            year = int(input("year: "))
-            if year == 11 or year == 12 or year == 13:
-                return year
-            else: 
-                print("Enter a valid year")
-        except ValueError:
-            print("Enter a valid input")
+    """call the int input with the specifications for the year input"""
+    int_input("Enter year: ", "Year is not valid, enter year 11, 12 or 13", (11, 13))
+    
 
 
 def combined_credits(student_data, name):
